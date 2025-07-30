@@ -17,14 +17,10 @@ A Chrome extension that filters out pre-canned congratulatory comments on Linked
 ### From Source
 
 1. Clone or download this repository
-2. Generate icon files by opening `generate-icons.html` in your browser and downloading all 8 PNG files:
-   - `icon16.png`, `icon32.png`, `icon48.png`, `icon128.png` (enabled state)
-   - `icon16_disabled.png`, `icon32_disabled.png`, `icon48_disabled.png`, `icon128_disabled.png` (disabled state)
-3. Save all PNG files in the extension directory
-4. Open Chrome and navigate to `chrome://extensions/`
-5. Enable "Developer mode" in the top right corner
-6. Click "Load unpacked" and select the extension directory
-7. The LinkedIn Comment Filter extension should now appear in your extensions list
+2. Open Chrome and navigate to `chrome://extensions/`
+3. Enable "Developer mode" in the top right corner
+4. Click "Load unpacked" and select the extension directory
+5. The LinkedIn Comment Filter extension should now appear in your extensions list
 
 ### Usage
 
@@ -72,7 +68,6 @@ linkedin-comment-purge/
 ├── popup.js             # Popup status display
 ├── content.js           # Main filtering logic for LinkedIn pages
 ├── background.js        # Handles toolbar icon clicks and state management
-├── generate-icons.html  # Tool to generate icon PNG files
 ├── icon.svg            # Source SVG icon design
 ├── icon16.png          # 16x16 enabled state icon
 ├── icon32.png          # 32x32 enabled state icon  
