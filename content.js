@@ -41,11 +41,12 @@ const preCannedPhrases = [
 
 let isFilteringEnabled = false;
 let hiddenComments = [];
+let tooltipElement = null;
 
 // Initialize but don't start filtering - wait for user to enable
 initializeExtension();
 
-// Listen for messages from popup
+// Listen for messages from background script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'toggleFilter') {
     toggleCommentFiltering();
@@ -65,6 +66,9 @@ function initializeExtension() {
   // Notify background script of initial disabled state
   chrome.runtime.sendMessage({action: 'updateIcon', status: 'disabled'});
   
+  // Create tooltip element
+  createTooltip();
+  
   // Set up observer to handle dynamically loaded comments
   const observer = new MutationObserver((mutations) => {
     if (isFilteringEnabled) {
@@ -75,7 +79,10 @@ function initializeExtension() {
         }
       });
       if (shouldFilter) {
-        setTimeout(filterComments, 100);
+        setTimeout(() => {
+          filterComments();
+          updateTooltip();
+        }, 100);
       }
     }
   });
@@ -126,6 +133,40 @@ function filterComments() {
   });
   
   console.log(`Hidden ${hiddenComments.length} pre-canned comments`);
+  updateTooltip();
+}
+
+function createTooltip() {
+  tooltipElement = document.createElement('div');
+  tooltipElement.id = 'linkedin-comment-filter-tooltip';
+  tooltipElement.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #0a66c2;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: none;
+    pointer-events: none;
+  `;
+  document.body.appendChild(tooltipElement);
+}
+
+function updateTooltip() {
+  if (!tooltipElement) return;
+  
+  if (isFilteringEnabled) {
+    const count = hiddenComments.length;
+    tooltipElement.textContent = `${count} comment${count !== 1 ? 's' : ''} filtered`;
+    tooltipElement.style.display = 'block';
+  } else {
+    tooltipElement.style.display = 'none';
+  }
 }
 
 function isPrecannedComment(commentText) {
@@ -236,6 +277,9 @@ function toggleCommentFiltering() {
     });
     hiddenComments = [];
   }
+  
+  // Update tooltip display
+  updateTooltip();
   
   // Notify background script of state change
   chrome.runtime.sendMessage({
