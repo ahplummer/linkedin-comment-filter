@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "LinkedIn Comment Purge",
+  "version": "1.0.0",
+  "description": "A Chrome extension to help manage and purge LinkedIn comments",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://*.linkedin.com/*"
+  ],
+  "action": {
+    "default_title": "LinkedIn Comment Filter - OFF (click to enable)",
+    "default_icon": {
+      "16": "icon16_disabled.png",
+      "32": "icon32_disabled.png",
+      "48": "icon48_disabled.png",
+      "128": "icon128_disabled.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "32": "icon32.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.linkedin.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

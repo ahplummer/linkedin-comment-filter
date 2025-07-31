@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .icon-container { margin: 20px 0; }
+        canvas { border: 1px solid #ccc; margin: 10px; }
+        button { padding: 10px 20px; margin: 5px; background: #0077B5; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>LinkedIn Comment Filter - Icon Generator</h1>
+    <p>Click the buttons below to download icon files for the Chrome extension:</p>
+    
+    <div class="icon-container">
+        <h3>16x16 Icon</h3>
+        <canvas id="icon16" width="16" height="16"></canvas>
+        <button onclick="downloadIcon('icon16', 'icon16.png')">Download 16x16</button>
+    </div>
+    
+    <div class="icon-container">
+        <h3>32x32 Icon</h3>
+        <canvas id="icon32" width="32" height="32"></canvas>
+        <button onclick="downloadIcon('icon32', 'icon32.png')">Download 32x32</button>
+    </div>
+    
+    <div class="icon-container">
+        <h3>48x48 Icon</h3>
+        <canvas id="icon48" width="48" height="48"></canvas>
+        <button onclick="downloadIcon('icon48', 'icon48.png')">Download 48x48</button>
+    </div>
+    
+    <div class="icon-container">
+        <h3>128x128 Icon</h3>
+        <canvas id="icon128" width="128" height="128"></canvas>
+        <button onclick="downloadIcon('icon128', 'icon128.png')">Download 128x128</button>
+    </div>
+
+    <!-- Disabled state icons -->
+    <h2>Disabled State Icons (Grayscale)</h2>
+    
+    <div class="icon-container">
+        <h3>16x16 Icon (Disabled)</h3>
+        <canvas id="icon16_disabled" width="16" height="16"></canvas>
+        <button onclick="downloadIcon('icon16_disabled', 'icon16_disabled.png')">Download 16x16 Disabled</button>
+    </div>
+    
+    <div class="icon-container">
+        <h3>32x32 Icon (Disabled)</h3>
+        <canvas id="icon32_disabled" width="32" height="32"></canvas>
+        <button onclick="downloadIcon('icon32_disabled', 'icon32_disabled.png')">Download 32x32 Disabled</button>
+    </div>
+    
+    <div class="icon-container">
+        <h3>48x48 Icon (Disabled)</h3>
+        <canvas id="icon48_disabled" width="48" height="48"></canvas>
+        <button onclick="downloadIcon('icon48_disabled', 'icon48_disabled.png')">Download 48x48 Disabled</button>
+    </div>
+    
+    <div class="icon-container">
+        <h3>128x128 Icon (Disabled)</h3>
+        <canvas id="icon128_disabled" width="128" height="128"></canvas>
+        <button onclick="downloadIcon('icon128_disabled', 'icon128_disabled.png')">Download 128x128 Disabled</button>
+    </div>
+
+    <script>
+        // Helper function for rounded rectangles
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        function drawIcon(canvas, size, disabled = false) {
+            const ctx = canvas.getContext('2d');
+            const scale = size / 128;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Background circle
+            ctx.fillStyle = disabled ? '#888888' : '#0077B5';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, 60 * scale, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // White border
+            ctx.strokeStyle = disabled ? '#CCCCCC' : '#ffffff';
+            ctx.lineWidth = 4 * scale;
+            ctx.stroke();
+            
+            // LinkedIn "L" letter
+            ctx.fillStyle = disabled ? '#CCCCCC' : 'white';
+            // Vertical part of L
+            ctx.fillRect(25 * scale, 35 * scale, 8 * scale, 50 * scale);
+            // Horizontal part of L
+            ctx.fillRect(25 * scale, 77 * scale, 25 * scale, 8 * scale);
+            
+            // Pencil eraser (wider and more pronounced)
+            ctx.save();
+            ctx.translate(70 * scale, 25 * scale);
+            ctx.rotate(Math.PI / 4);
+            
+            // Pencil body (wider)
+            ctx.fillStyle = disabled ? '#999999' : '#FFD700';
+            roundRect(ctx, 0, 0, 12 * scale, 40 * scale, 2 * scale);
+            ctx.fill();
+            
+            // Eraser (much more pronounced)
+            ctx.fillStyle = disabled ? '#AAAAAA' : '#FF69B4';
+            roundRect(ctx, 0, -15 * scale, 12 * scale, 15 * scale, 2 * scale);
+            ctx.fill();
+            
+            // Metal band (wider)
+            ctx.fillStyle = disabled ? '#777777' : '#C0C0C0';
+            ctx.fillRect(0, -3 * scale, 12 * scale, 3 * scale);
+            
+            ctx.restore();
+            
+            // Eraser sparkles (only for larger sizes)
+            if (size >= 32) {
+                ctx.fillStyle = disabled ? '#AAAAAA' : '#FF69B4';
+                ctx.globalAlpha = disabled ? 0.4 : 0.7;
+                ctx.beginPath();
+                ctx.arc(95 * scale, 45 * scale, 2 * scale, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                ctx.globalAlpha = disabled ? 0.3 : 0.5;
+                ctx.beginPath();
+                ctx.arc(88 * scale, 52 * scale, 1.5 * scale, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                ctx.fillStyle = disabled ? '#999999' : '#FFD700';
+                ctx.globalAlpha = disabled ? 0.3 : 0.6;
+                ctx.beginPath();
+                ctx.arc(98 * scale, 55 * scale, 1 * scale, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                ctx.globalAlpha = 1;
+            }
+        }
+        
+        function downloadIcon(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+        
+        // Generate all icons on page load
+        window.onload = function() {
+            // Enabled icons
+            drawIcon(document.getElementById('icon16'), 16, false);
+            drawIcon(document.getElementById('icon32'), 32, false);
+            drawIcon(document.getElementById('icon48'), 48, false);
+            drawIcon(document.getElementById('icon128'), 128, false);
+            
+            // Disabled icons
+            drawIcon(document.getElementById('icon16_disabled'), 16, true);
+            drawIcon(document.getElementById('icon32_disabled'), 32, true);
+            drawIcon(document.getElementById('icon48_disabled'), 48, true);
+            drawIcon(document.getElementById('icon128_disabled'), 128, true);
+        };
+    </script>
+</body>
+</html>
