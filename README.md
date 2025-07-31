@@ -129,7 +129,7 @@ This extension requires the following permissions:
 
 ## License
 
-[Add your preferred license here]
+MIT License - see LICENSE file for details
 
 ## Disclaimer
 
